@@ -1139,6 +1139,9 @@ SnapSerializer.prototype.loadScripts = function (object, scripts, model) {
             if (!element) {
                 return;
             }
+            if(child.attributes["customData"]){
+                element.customData = child.attributes["customData"];
+            }
             element.setPosition(new Point(
                 (+child.attributes.x || 0) * scale,
                 (+child.attributes.y || 0) * scale
@@ -2196,11 +2199,20 @@ BlockMorph.prototype.toXML = BlockMorph.prototype.toScriptXML = function (
 
     // save my position to xml
     if (savePosition) {
-        xml = serializer.format(
-            '<script x="@" y="@">',
-            position.x / scale,
-            position.y / scale
-        );
+        if (block.customData) {
+            xml = serializer.format(
+                '<script x="@" y="@" customData="@">',
+                position.x / scale,
+                position.y / scale,
+                block.customData
+            );
+        } else {
+            xml = serializer.format(
+                '<script x="@" y="@">',
+                position.x / scale,
+                position.y / scale
+            );
+        }
     } else {
         xml = '<script>';
     }
