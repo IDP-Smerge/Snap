@@ -1139,9 +1139,11 @@ SnapSerializer.prototype.loadScripts = function (object, scripts, model) {
             if (!element) {
                 return;
             }
+            
             if(child.attributes["customData"]){
                 element.customData = child.attributes["customData"];
             }
+
             element.setPosition(new Point(
                 (+child.attributes.x || 0) * scale,
                 (+child.attributes.y || 0) * scale
@@ -1154,6 +1156,11 @@ SnapSerializer.prototype.loadScripts = function (object, scripts, model) {
             if (!element) {
                 return;
             }
+
+            if(child.attributes["customData"]){
+                element.customData = child.attributes["customData"];
+            }
+
             element.setPosition(new Point(
                 (+child.attributes.x || 0) * scale,
                 (+child.attributes.y || 0) * scale
@@ -1174,6 +1181,11 @@ SnapSerializer.prototype.loadScriptsArray = function (model, object) {
             if (!element) {
                 return;
             }
+
+            if(child.attributes["customData"]){
+                element.customData = child.attributes["customData"];
+            }
+
             element.setPosition(new Point(
                 (+child.attributes.x || 0) * scale,
                 (+child.attributes.y || 0) * scale
@@ -1185,6 +1197,11 @@ SnapSerializer.prototype.loadScriptsArray = function (model, object) {
             if (!element) {
                 return;
             }
+
+            if(child.attributes["customData"]){
+                element.customData = child.attributes["customData"];
+            }
+
             element.setPosition(new Point(
                 (+child.attributes.x || 0) * scale,
                 (+child.attributes.y || 0) * scale
@@ -2267,6 +2284,16 @@ ReporterBlockMorph.prototype.toScriptXML = function (
     }
 
     if (savePosition) {
+        if (this.customData) {
+            return serializer.format(
+                '<script x="@" y="@" customData="@">%</script>',
+                position.x / scale,
+                position.y / scale,
+                this.customData,
+                this.toXML(serializer)
+            );
+        }
+
         return serializer.format(
             '<script x="@" y="@">%</script>',
             position.x / scale,
@@ -2553,6 +2580,19 @@ CommentMorph.prototype.toXML = function (serializer) {
     } else {
         position = this.topLeft();
     }
+
+    if (this.customData) {
+        return serializer.format(
+            '<comment x="@" y="@" w="@" collapsed="@" customData="@">%</comment>',
+            position.x / scale,
+            position.y / scale,
+            this.textWidth() / scale,
+            this.isCollapsed,
+            this.customData,
+            serializer.escape(this.text())
+        );
+    }
+
     return serializer.format(
         '<comment x="@" y="@" w="@" collapsed="@">%</comment>',
         position.x / scale,
